@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Assignment 2: Blocky Animal</title>
+    <link rel="stylesheet" type="text/css" href="../CSE160-ASG2/stylesheet.css">
+  </head>
+
+  <body onload="main()">
+    <div>
+        <canvas id="webgl" width="400" height="400">
+        Please use a browser that supports "canvas"
+        </canvas>
+        <!-- <img src="../src/foxReference.png" alt="Fox Drawing" id="foxImg" width="400px"> -->
+    </div>
+    <p id="numdot"> XXX </p>
+    <p>
+    <button type="button" id="green">Green</button>
+    <button type="button" id="red">Red</button>
+
+    <button type="button" id="clearButton">Clear</button>
+    <p>
+
+    <button type="button" id="pointButton">Point</button>
+    <button type="button" id="triButton">Triangle</button>
+    <button type="button" id="circleButton">Circle</button>
+    <!-- <button type="button" id="foxButton">Show Fox</button> -->
+
+    <p>
+    x <input type="range" min="0" max="100" value="100" class="slider" id="redSlide">
+    <p>
+    Yellow <input type="range" min="-45" max="45" value="0" class="slider" id="yellowSlide">
+    Animation:
+        <button type="button" id="animationYellowOnButton">ON</button>
+        <button type="button" id="animationYellowOffButton">OFF</button>
+    <p>
+    Magenta <input type="range" min="-45" max="45" value="0" class="slider" id="magentaSlide">
+    Animation:
+        <button type="button" id="animationMagentaOnButton">ON</button>
+        <button type="button" id="animationMagentaOffButton">OFF</button>
+    <p>
+    Camera Angle <input type="range" min="0" max="360" value="5" class="slider" id="angleSlide">
+    <p>
+
+
+    <script src="../CSE160-ASG2/lib/webgl-utils.js"></script>
+    <script src="../CSE160-ASG2/lib/webgl-debug.js"></script>
+    <script src="../CSE160-ASG2/lib/cuon-utils.js"></script>
+    <script src="../CSE160-ASG2/lib/cuon-matrix-cse160.js"></script>
+    <script src="../CSE160-ASG2/Circle.js"></script>
+    <script src="../CSE160-ASG2/Triangle.js"></script>
+    <script src="../CSE160-ASG2/Point.js"></script>
+    <script src="../CSE160-ASG2/Cube.js"></script>
+    <script src="../CSE160-ASG2/BlockyAnimal.js"></script>
+  </body>
+
+</html>

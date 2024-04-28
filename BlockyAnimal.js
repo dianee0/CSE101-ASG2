@@ -92,6 +92,8 @@ let g_selectedSize=5;
 let g_selectedType="POINT";
 
 let g_globalAngle = 0;
+let g_globalAngleY = 0;
+let g_globalAngleZ = 0;
 let g_armAngle = 0;
 let g_legAngle = 0;
 let g_backFootAngle = 0;
@@ -99,12 +101,6 @@ let g_feetAngle = 0;
 
 let g_Animation = false;
 
-// global Variables for mouse movement on Rabbit
-let isDragging = false;
-let lastMouseX = -1;
-let lastMouseY = -1;
-let globalAngleX = 0;
-let globalAngleY = 0;
 
 function addActionsForHTMLUI(){
 
@@ -113,12 +109,17 @@ function addActionsForHTMLUI(){
     document.getElementById("animationOnButton").onclick = function() { g_Animation =true; }
     document.getElementById("animationOffButton").onclick = function() { g_Animation =false; }
 
+    // document.getElementById("animationMagentaOnButton").onclick = function() { g_magentaAnimation =true; }
+    // document.getElementById("animationMagentaOffButton").onclick = function() { g_magentaAnimation =false; }
+
     document.getElementById("armSlide").addEventListener("mousemove", function() { g_armAngle = this.value; renderAllShapes(); })
     document.getElementById("backfeetSlide").addEventListener("mousemove", function() { g_backFootAngle = this.value; renderAllShapes(); })
     document.getElementById("legSlide").addEventListener("mousemove", function() { g_legAngle = this.value; renderAllShapes(); })
 
     document.getElementById("angleSlide").addEventListener("mousemove", function() { g_globalAngle = this.value; renderAllShapes(); })
-    
+    document.getElementById("angleYSlide").addEventListener("mousemove", function() { g_globalAngleY = this.value; renderAllShapes(); });
+    document.getElementById("angleZSlide").addEventListener("mousemove", function() { g_globalAngleZ = this.value; renderAllShapes(); });
+    document.getElementById("resetCameraButton").onclick = resetCameraAngles;
 
 
 
@@ -212,10 +213,29 @@ function updateAnimationAngles() {
 
 }
 
+function resetCameraAngles() {
+    // Reset angles
+    g_globalAngle = 0;
+    g_globalAngleY = 0;
+    g_globalAngleZ = 0;
+
+    // Update slider positions
+    document.getElementById('angleSlide').value = 0;
+    document.getElementById('angleYSlide').value = 0;
+    document.getElementById('angleZSlide').value = 0;
+
+    // Re-render the scene
+    renderAllShapes();
+}
+
 function renderAllShapes() {
     var startTime = performance.now();
 
-    var globalRotMat = new Matrix4().rotate(g_globalAngle,0,1,0);
+    var globalRotMat = new Matrix4()
+    .rotate(g_globalAngle, 0, 1, 0) // Rotation around Y-axis
+    .rotate(g_globalAngleY, 1, 0, 0) // Rotation around X-axis
+    .rotate(g_globalAngleZ, 0, 0, 1); // Rotation around Z-axis
+
     gl.uniformMatrix4fv(u_GlobalRotateMatrix, false, globalRotMat.elements);
 
     // Clear <canvas>
@@ -324,6 +344,21 @@ function renderAllShapes() {
     RightEar.matrix.rotate(-8,0,0);
     RightEar.matrix.scale(0.2,0.4,0.08);
     RightEar.render();
+
+    innerLeftEar = new Cube();
+    innerLeftEar.color = [0.902, 0.627, 0.604, 1];
+    innerLeftEar.matrix.translate(-.3,.43,-0.3001);
+    innerLeftEar.matrix.rotate(8,0,0);
+    innerLeftEar.matrix.scale(0.1,0.3,0.08);
+    innerLeftEar.render();
+
+    innerRightEar = new Cube();
+    innerRightEar.color = [0.902, 0.627, 0.604, 1];
+    innerRightEar.matrix.translate(-0.1,.44,-0.3001);
+    innerRightEar.matrix.rotate(-8,0,0);
+    innerRightEar.matrix.scale(0.1,0.3,0.08);
+    innerRightEar.render();
+
 
     var leftArm = new Cube();
     leftArm.color = [1,1,1,1];

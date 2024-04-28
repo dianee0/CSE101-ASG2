@@ -134,10 +134,8 @@ function main() {
 
     // Set up actions for the HTML UI elements
     addActionsForHTMLUI();
+    initMouseControls(); // Initialize mouse controls
 
-    // Register function (event handler) to be called on a mouse press
-    canvas.onmousedown = click;
-    canvas.onmousemove = function(ev) { if (ev.buttons == 1) {click(ev) } };
 
     // Specify the color for clearing <canvas>
     gl.clearColor(91/255, 138/255, 83/255, 1.0);
@@ -228,13 +226,57 @@ function resetCameraAngles() {
     renderAllShapes();
 }
 
+function initMouseControls() {
+    let isDragging = false;
+    let lastX = -1, lastY = -1;
+
+    canvas.onmousedown = function(ev) {
+        const rect = ev.target.getBoundingClientRect();
+        lastX = ev.clientX - rect.left;
+        lastY = ev.clientY - rect.top;
+        isDragging = true;
+    };
+
+    canvas.onmousemove = function(ev) {
+        if (isDragging) {
+            const rect = ev.target.getBoundingClientRect();
+            let x = ev.clientX - rect.left;
+            let y = ev.clientY - rect.top;
+            let factor = 90 / canvas.height; // Increases sensitivity
+            let dx = factor * (x - lastX);
+            let dy = factor * (y - lastY);
+            
+            // Update global angles
+            g_globalAngleY += dy;
+            g_globalAngle += dx;
+            
+            // Update sliders if you have them on UI
+            document.getElementById('angleSlide').value = g_globalAngle;
+            document.getElementById('angleYSlide').value = g_globalAngleY;
+            
+            renderAllShapes();
+
+            lastX = x;
+            lastY = y;
+        }
+    };
+
+    canvas.onmouseup = function(ev) {
+        isDragging = false;
+    };
+
+    canvas.onmouseleave = function(ev) {
+        isDragging = false;
+    };
+}
+
 function renderAllShapes() {
     var startTime = performance.now();
 
     var globalRotMat = new Matrix4()
-    .rotate(g_globalAngle, 0, 1, 0) // Rotation around Y-axis
-    .rotate(g_globalAngleY, 1, 0, 0) // Rotation around X-axis
-    .rotate(g_globalAngleZ, 0, 0, 1); // Rotation around Z-axis
+        .rotate(g_globalAngle, 0, 1, 0) // Rotation around Y-axis
+        .rotate(g_globalAngleY, 1, 0, 0) // Rotation around X-axis
+        .rotate(g_globalAngleZ, 0, 0, 1); // Rotation around Z-axis
 
     gl.uniformMatrix4fv(u_GlobalRotateMatrix, false, globalRotMat.elements);
 

@@ -28,3 +28,14 @@ body {
   font-size: 16px; /* font size */
   font-weight: 400;
 }
+
+#graderNote {
+  position: fixed;
+  top: 0;
+  right: 0;
+  max-width: 300px; /* Sets a maximum width */
+  padding: 10px;
+  z-index: 1000;
+  overflow: auto; /* Ensures all text is accessible */
+  word-wrap: break-word; /* Ensures text breaks nicely */
+}
